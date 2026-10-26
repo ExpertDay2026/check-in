@@ -28,10 +28,10 @@ window.APP = {
       bleed: 300,
       field:   { bg: 'rgba(255,255,255,.95)', color: '#0A1A3E', border: '#F0D678', radius: 2.4, pad: 2.2, size: 4, weight: 500 },
       tab:     { x: 50, y: 42, w: 80, size: 4, weight: 700, teksInternal: 'Internal', teksExternal: 'External' },
-      npk:     { x: 50, y: 50, w: 80, placeholder: 'Employee ID (NPK)', inputmode: 'text' },   // 'numeric' bila NPK hanya angka
+      npk:     { x: 50, y: 50, w: 80, placeholder: 'NPK (6 digits)', inputmode: 'numeric' },   // 'numeric' bila NPK hanya angka
       nama:    { x: 50, y: 50, w: 80, placeholder: 'Full Name' },
       company: { x: 50, y: 58, w: 80, placeholder: 'Company' },
-      tombol:  { x: 50, y: 65, w: 62, size: 5, weight: 700, color: '#0A1A3E', bg: '#F0D678', radius: 3.2, pad: 2.4, teks: 'Check-in' },
+      tombol:  { x: 50, y: 67, w: 62, size: 5, weight: 700, color: '#0A1A3E', bg: '#F0D678', radius: 3.2, pad: 2.4, teks: 'Check-in' },
       pesan:   { x: 50, y: 76, w: 80, size: 3.4, weight: 500, color: '#ffb4b4', lineHeight: 1.3 }   // pesan galat
     },
 
