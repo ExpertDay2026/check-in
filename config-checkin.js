@@ -37,7 +37,8 @@ window.APP = {
 
     // Layar 2: Check-in Completed
     success: {
-      bg: 'checked-in-bg.webp',         // bleed otomatis dari ukuran gambar; isi 'bleed' untuk menimpa
+      bg: 'checked-in-bg.png',          // desain lama (maskot): ganti ke 'checked-in-bg.webp' dan hapus baris bleed di bawah
+      bleed: 300,
       nama:    { x: 50, y: 54, w: 77, h: 9.2, size: 8, weight: 700, lineHeight: 1.1, lines: 2, min: 3.5 },
       divisi:  { x: 50, y: 60, w: 84, h: 6,  size: 5, weight: 500, color: '#F0D678', min: 3.2 },
       waktu:   { x: 50, y: 68, size: 4, weight: 500, color: 'rgba(255,255,255,.88)' },
