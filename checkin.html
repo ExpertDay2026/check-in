@@ -20,6 +20,18 @@ input.e:focus,button.e:focus-visible,.tab button:focus-visible{box-shadow:0 0 0 
 .tab{display:flex;gap:calc(var(--u)*1.5)}
 .tab button{flex:1}
 .lnk{text-decoration:underline;text-underline-offset:.25em}
+@keyframes beat{
+0%,70%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 0 rgba(240,214,120,0),0 0 calc(var(--u)*1.5) rgba(240,214,120,.3)}
+12%{transform:translate(-50%,-50%) scale(1.07);box-shadow:0 0 0 calc(var(--u)*.4) rgba(240,214,120,.55),0 0 calc(var(--u)*5) rgba(240,214,120,.85)}
+24%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 calc(var(--u)*1.6) rgba(240,214,120,0),0 0 calc(var(--u)*2) rgba(240,214,120,.3)}
+38%{transform:translate(-50%,-50%) scale(1.045);box-shadow:0 0 0 calc(var(--u)*.3) rgba(240,214,120,.4),0 0 calc(var(--u)*4) rgba(240,214,120,.65)}
+}
+.beat{animation:beat 1.6s ease-in-out infinite}
+.beat:disabled{animation:none}
+@keyframes fl{0%{opacity:0}20%{opacity:.9}100%{opacity:0}}
+#flash{position:fixed;top:0;right:0;bottom:0;left:0;z-index:40;background:#fff;pointer-events:none;opacity:0}
+#flash.go{animation:fl .75s ease-out}
+@media (prefers-reduced-motion:reduce){.beat{animation:none}#flash.go{animation:none}}
 #load{position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0A1A3E;color:rgba(255,255,255,.85);font-size:14px;transition:opacity .3s}
 .sp{width:34px;height:34px;border-radius:50%;border:3px solid rgba(240,214,120,.25);border-top-color:#F0D678;animation:spin .9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -29,6 +41,7 @@ input.e:focus,button.e:focus-visible,.tab button:focus-visible{box-shadow:0 0 0 
 <body>
 <div id="stage"></div>
 <div id="load" role="status"><div class="sp"></div><div>Loading…</div></div>
+<div id="flash"></div>
 <script>/* pengaman: layar "Loading" tidak boleh menutup halaman selamanya */
 function _nl(){var l=document.getElementById("load");if(l)l.style.display="none"}
 addEventListener("error",_nl);setTimeout(_nl,20000);</script>
@@ -157,7 +170,7 @@ var iC=mk(sF,'input',Object.assign({},FIELD,{x:50,y:58,w:80,placeholder:'Company
 iK.type=iN.type=iC.type='text'; iK.autocomplete='off'; iK.autocapitalize='characters'; iK.maxLength=30;
 iK.setAttribute('inputmode',(F.npk&&F.npk.inputmode)||'text');
 iN.autocomplete='name'; iN.maxLength=80; iC.autocomplete='organization'; iC.maxLength=80;
-var bT=mk(sF,'button',Object.assign({x:50,y:69,w:62,teks:'Check-in'},BTN),F.tombol); bT.type='button';
+var bT=mk(sF,'button',Object.assign({x:50,y:69,w:62,teks:'Check-in'},BTN),F.tombol); bT.type='button'; bT.classList.add('beat');
 var eE=mk(sF,'div',{x:50,y:76,w:80,size:3.4,weight:500,color:'#ffb4b4',lineHeight:1.3,shadow:SH},F.pesan);
 var lbT=bT.textContent;
 
@@ -195,8 +208,9 @@ function done(r){
   sN.textContent=r.nama; sD.textContent=r.bagian; sW.textContent='Pukul '+r.waktu;
   if(sC)sC.textContent=r.again?'Anda sudah check-in sebelumnya.':'';
   show(sO); texts.forEach(shrink);
-  if(A.VIBRATE&&navigator.vibrate)try{navigator.vibrate(A.VIBRATE);}catch(e){}
+  var f=document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); // kilat
 }
+function buzz(){if(A.VIBRATE&&navigator.vibrate)try{navigator.vibrate(A.VIBRATE);}catch(e){}}
 
 function submit(){
   err(''); var body;
@@ -213,8 +227,9 @@ function submit(){
   busy(true);
   api('checkin',body).then(function(r){busy(false);done(r);})
     .catch(function(e){busy(false);err((e&&e.message)||'Terjadi kesalahan. Coba lagi.');});
+  return true;
 }
-bT.onclick=submit;
+bT.onclick=function(){if(submit())buzz();}; // getar hanya dari tap tombol (bukan Enter, bukan saat berhasil), dan hanya bila data valid
 [iK,iN,iC].forEach(function(i){i.onkeydown=function(e){if(e.key==='Enter')submit();};});
 
 /* ---------- mulai ---------- */
