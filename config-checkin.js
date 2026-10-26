@@ -28,7 +28,7 @@ window.APP = {
       bleed: 300,
       field:   { bg: 'rgba(255,255,255,.95)', color: '#0A1A3E', border: '#F0D678', radius: 2.4, pad: 2.2, size: 4, weight: 500 },
       tab:     { x: 50, y: 42, w: 80, size: 4, weight: 700, teksInternal: 'Internal', teksExternal: 'External' },
-      npk:     { x: 50, y: 50, w: 80, placeholder: 'NPK (6 digits)', inputmode: 'numeric' },   // 'numeric' bila NPK hanya angka
+      npk:     { x: 50, y: 54, w: 80, placeholder: 'NPK (6 digits)', inputmode: 'numeric' },   // 'numeric' bila NPK hanya angka
       nama:    { x: 50, y: 50, w: 80, placeholder: 'Full Name' },
       company: { x: 50, y: 58, w: 80, placeholder: 'Company' },
       tombol:  { x: 50, y: 67, w: 62, size: 5, weight: 700, color: '#0A1A3E', bg: '#F0D678', radius: 3.2, pad: 2.4, teks: 'Check-in' },
@@ -42,8 +42,8 @@ window.APP = {
       nama:    { x: 50, y: 54, w: 77, h: 9.2, size: 8, weight: 700, lineHeight: 1.1, lines: 2, min: 3.5 },
       divisi:  { x: 50, y: 60, w: 84, h: 6,  size: 5, weight: 500, color: '#F0D678', min: 3.2 },
       waktu:   { x: 50, y: 68, size: 4, weight: 500, color: 'rgba(255,255,255,.88)' },
-      catatan: { x: 50, y: 73, w: 80, size: 3.4, weight: 500, color: '#F0D678' },                // "sudah check-in sebelumnya"
-      ulang:   { x: 50, y: 93, w: 62, size: 3.4, teks: 'Check in another person' }              // false = sembunyikan
+      catatan: { x: 50, y: 73, w: 80, size: 5, weight: 500, color: '#F0D678' },                // "sudah check-in sebelumnya"
+      // ulang:   { x: 50, y: 93, w: 62, size: 3.4, teks: 'Check in another person' }              // false = sembunyikan
     }
   }
 };
