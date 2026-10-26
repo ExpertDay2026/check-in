@@ -17,8 +17,12 @@ button.e,.tab button{border:0;cursor:pointer;font-family:inherit;font-size:inher
 button.e:disabled{opacity:.6;cursor:not-allowed}
 input.e{text-align:left;outline:none}
 input.e:focus,button.e:focus-visible,.tab button:focus-visible{box-shadow:0 0 0 calc(var(--u)*.6) rgba(240,214,120,.55)}
-.tab{display:flex;gap:calc(var(--u)*1.5)}
-.tab button{flex:1}
+.tab{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:calc(var(--u)*.6);background:rgba(255,255,255,.16);border:calc(var(--u)*.3) solid #F0D678;border-radius:calc(var(--u)*3.6);touch-action:pan-y;-webkit-user-select:none;user-select:none}
+.tab i{position:absolute;top:calc(var(--u)*.6);bottom:calc(var(--u)*.6);left:calc(var(--u)*.6);width:calc(50% - var(--u)*.6);background:#F0D678;border-radius:calc(var(--u)*3);box-shadow:0 calc(var(--u)*.3) calc(var(--u)*1.2) rgba(0,0,0,.35);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.tab.ext i{transform:translateX(100%)}
+.tab.drag i{transition:none}
+.tab button{position:relative;z-index:1;background:transparent;color:#fff;transition:color .2s}
+.tab button.on{color:#0A1A3E}
 .lnk{text-decoration:underline;text-underline-offset:.25em}
 @keyframes beat{
 0%,70%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 0 rgba(240,214,120,0),0 0 calc(var(--u)*1.5) rgba(240,214,120,.3)}
@@ -31,7 +35,7 @@ input.e:focus,button.e:focus-visible,.tab button:focus-visible{box-shadow:0 0 0 
 @keyframes fl{0%{opacity:0}20%{opacity:.9}100%{opacity:0}}
 #flash{position:fixed;top:0;right:0;bottom:0;left:0;z-index:40;background:#fff;pointer-events:none;opacity:0}
 #flash.go{animation:fl .75s ease-out}
-@media (prefers-reduced-motion:reduce){.beat{animation:none}#flash.go{animation:none}}
+@media (prefers-reduced-motion:reduce){.beat{animation:none}#flash.go{animation:none}.tab i,.tab button{transition:none}}
 #load{position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0A1A3E;color:rgba(255,255,255,.85);font-size:14px;transition:opacity .3s}
 .sp{width:34px;height:34px;border-radius:50%;border:3px solid rgba(240,214,120,.25);border-top-color:#F0D678;animation:spin .9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -157,10 +161,10 @@ var FIELD=Object.assign({bg:'rgba(255,255,255,.95)',color:'#0A1A3E',border:'#F0D
 var BTN={size:5,weight:700,color:'#0A1A3E',bg:'#F0D678',radius:3.2,pad:2.4};
 var TB=Object.assign({x:50,y:42,w:80,size:4,weight:700,teksInternal:'Internal',teksExternal:'External'},F.tab);
 var tb=mk(sF,'div',{x:TB.x,y:TB.y,w:TB.w,size:TB.size,weight:TB.weight}); tb.classList.add('tab');
-var bI=document.createElement('button'),bE=document.createElement('button');
+var th=document.createElement('i'),bI=document.createElement('button'),bE=document.createElement('button'); // th = tombol emas yang meluncur
+tb.setAttribute('role','radiogroup'); tb.style.borderColor=FIELD.border||'#F0D678'; tb.appendChild(th);
 [[bI,TB.teksInternal],[bE,TB.teksExternal]].forEach(function(p){
-  var b=p[0]; b.type='button'; b.textContent=p[1];
-  b.style.padding=u(FIELD.pad*.6)+' '+u(1); b.style.borderRadius=u(FIELD.radius); b.style.border=u(.3)+' solid '+(FIELD.border||'#F0D678');
+  var b=p[0]; b.type='button'; b.textContent=p[1]; b.setAttribute('role','radio'); b.style.padding=u(1)+' '+u(1);
   tb.appendChild(b);
 });
 var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'NPK (6 digits)'}),F.npk);
@@ -186,9 +190,27 @@ function err(m){eE.textContent=m||'';}
 function busy(on){bT.disabled=on;bT.textContent=on?'Sending…':lbT;}
 function setTab(t){
   tab=t; iK.hidden=t!=='internal'; iN.hidden=iC.hidden=t==='internal'; err('');
-  [[bI,'internal'],[bE,'external']].forEach(function(p){var on=t===p[1];p[0].style.background=on?'#F0D678':'rgba(255,255,255,.16)';p[0].style.color=on?'#0A1A3E':'#fff';});
+  tb.classList.toggle('ext',t==='external');
+  [[bI,'internal'],[bE,'external']].forEach(function(p){var on=t===p[1];p[0].classList.toggle('on',on);p[0].setAttribute('aria-checked',on);});
 }
 bI.onclick=function(){setTab('internal');}; bE.onclick=function(){setTab('external');};
+tb.onkeydown=function(e){if(e.key==='ArrowLeft')setTab('internal');else if(e.key==='ArrowRight')setTab('external');};
+/* geser (swipe) tombol emas; ketukan di salah satu sisi tetap bekerja */
+var dg=null,dragged=false;
+tb.addEventListener('pointerdown',function(e){dg={x:e.clientX,s:tab==='external'?th.offsetWidth:0,m:false};});
+tb.addEventListener('pointermove',function(e){
+  if(!dg)return; var dx=e.clientX-dg.x;
+  if(!dg.m){if(Math.abs(dx)<6)return;dg.m=true;tb.classList.add('drag');try{tb.setPointerCapture(e.pointerId);}catch(x){}}
+  th.style.transform='translateX('+Math.max(0,Math.min(th.offsetWidth,dg.s+dx))+'px)';
+});
+function dragEnd(e){
+  if(!dg)return; var d=dg; dg=null; if(!d.m)return;
+  dragged=true; setTimeout(function(){dragged=false;},60);
+  tb.classList.remove('drag'); th.style.transform='';
+  setTab(d.s+(e.clientX-d.x)>th.offsetWidth/2?'external':'internal');
+}
+tb.addEventListener('pointerup',dragEnd); tb.addEventListener('pointercancel',dragEnd);
+tb.addEventListener('click',function(e){if(dragged){e.stopPropagation();e.preventDefault();}},true);
 
 function api(a,args){
   var ac=new AbortController(),tm=setTimeout(function(){ac.abort();},30000);
