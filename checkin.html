@@ -163,7 +163,7 @@ var bI=document.createElement('button'),bE=document.createElement('button');
   b.style.padding=u(FIELD.pad*.6)+' '+u(1); b.style.borderRadius=u(FIELD.radius); b.style.border=u(.3)+' solid '+(FIELD.border||'#F0D678');
   tb.appendChild(b);
 });
-var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'Employee ID (NPK)'}),F.npk);
+var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'NPK (6 digits)'}),F.npk);
 var iN=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'Full Name'}),F.nama);
 var iC=mk(sF,'input',Object.assign({},FIELD,{x:50,y:58,w:80,placeholder:'Company'}),F.company);
 iK.type=iN.type=iC.type='text'; iK.autocomplete='off'; iK.autocapitalize='characters'; iK.maxLength=30;
