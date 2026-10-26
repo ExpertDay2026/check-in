@@ -1,20 +1,48 @@
-// Tambahan config untuk checkin.html. Dimuat SETELAH config.js, jadi file lama tidak perlu diubah.
-// Layar "Check-in Completed" memakai DESIGN.success yang sudah ada (checked-in-bg.webp, nama, divisi, waktu).
-// Pratinjau: .../checkin.html?demo=form   dan   .../checkin.html?demo=ok   (tambah &grid=1 untuk garis bantu 10%)
-window.APP.CHECKIN_API_URL = 'https://script.google.com/macros/s/AKfycbwshTczi7I7VZ05iLgT8pVOaW2KoO1BySEJJLBghiprZZ5IUOBSarUsjpB3Ty55xDdp/exec';   // URL /exec dari Code.gs yang baru
+// ======================================================================
+// WAJIB: ganti ISI_URL_EXEC_BARU_DI_SINI dengan URL /exec dari Apps Script (Code.gs),
+//        tetap di dalam tanda kutip.
+// Posisi memakai PERSEN dari desain 1080 x 1920 (titik tengah elemen):
+//   x = dari kiri, y = dari atas, w = lebar kotak, h = tinggi maksimum (untuk ukuran huruf otomatis)
+//   size = ukuran huruf (persen lebar desain), weight, color, min (huruf terkecil), lines: 2 (nama dipecah 2 baris)
+// Gambar latar: 1080 x 2520 px. 300 px atas & bawah (bleed) hanya tampil di HP yang lebih tinggi dari 16:9,
+//   jadi simpan semua yang penting di area tengah y = 300 s/d 2220. Isi bleed: 0 bila gambar 1080 x 1920.
+// Pratinjau (tambah &grid=1 untuk garis bantu 10%):
+//   .../checkin.html?demo=form     layar isian
+//   .../checkin.html?demo=ok       layar Check-in Completed
+// ======================================================================
+window.APP = {
+  CHECKIN_API_URL: 'https://script.google.com/macros/s/AKfycbwshTczi7I7VZ05iLgT8pVOaW2KoO1BySEJJLBghiprZZ5IUOBSarUsjpB3Ty55xDdp/exec',
 
-window.APP.DESIGN.form = {
-  bg: 'rsvp-bg.webp',   // ganti dengan gambar form check-in Anda (1080 x 2520 bila ber-bleed)
-  bleed: 300,           // isi 0 bila gambar 1080 x 1920 biasa
-  field:   { bg: 'rgba(255,255,255,.95)', color: '#0A1A3E', border: '#F0D678', radius: 2.4, pad: 2.2, size: 4, weight: 500 },
-  tab:     { x: 50, y: 42, w: 80, size: 4, weight: 700, teksInternal: 'Internal', teksExternal: 'External' },
-  npk:     { x: 50, y: 50, w: 80, placeholder: 'Employee ID (NPK)', inputmode: 'text' },   // 'numeric' bila NPK hanya angka
-  nama:    { x: 50, y: 50, w: 80, placeholder: 'Full Name' },
-  company: { x: 50, y: 58, w: 80, placeholder: 'Company' },
-  tombol:  { x: 50, y: 69, w: 62, size: 5, weight: 700, color: '#0A1A3E', bg: '#F0D678', radius: 3.2, pad: 2.4, teks: 'Check-in' },
-  pesan:   { x: 50, y: 76, w: 80, size: 3.4, weight: 500, color: '#ffb4b4', lineHeight: 1.3 }
+  VIBRATE: [200, 100, 200],   // getar saat tap tombol Check-in (milidetik); false = mati
+
+  DESIGN: {
+    width: 1080, height: 1920,
+    color: '#ffffff',
+    font: "'Poppins', system-ui, sans-serif",
+    fontUrl: 'https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap',
+    letterbox: '#0A1A3E',               // samakan dengan warna tepi desain
+
+    // Layar 1: isian
+    form: {
+      bg: 'checkin-bg.png',
+      bleed: 300,
+      field:   { bg: 'rgba(255,255,255,.95)', color: '#0A1A3E', border: '#F0D678', radius: 2.4, pad: 2.2, size: 4, weight: 500 },
+      tab:     { x: 50, y: 42, w: 80, size: 4, weight: 700, teksInternal: 'Internal', teksExternal: 'External' },
+      npk:     { x: 50, y: 50, w: 80, placeholder: 'Employee ID (NPK)', inputmode: 'text' },   // 'numeric' bila NPK hanya angka
+      nama:    { x: 50, y: 50, w: 80, placeholder: 'Full Name' },
+      company: { x: 50, y: 58, w: 80, placeholder: 'Company' },
+      tombol:  { x: 50, y: 69, w: 62, size: 5, weight: 700, color: '#0A1A3E', bg: '#F0D678', radius: 3.2, pad: 2.4, teks: 'Check-in' },
+      pesan:   { x: 50, y: 76, w: 80, size: 3.4, weight: 500, color: '#ffb4b4', lineHeight: 1.3 }   // pesan galat
+    },
+
+    // Layar 2: Check-in Completed
+    success: {
+      bg: 'checked-in-bg.webp',         // bleed otomatis dari ukuran gambar; isi 'bleed' untuk menimpa
+      nama:    { x: 50, y: 54, w: 77, h: 9.2, size: 8, weight: 700, lineHeight: 1.1, lines: 2, min: 3.5 },
+      divisi:  { x: 50, y: 60, w: 84, h: 6,  size: 5, weight: 500, color: '#F0D678', min: 3.2 },
+      waktu:   { x: 50, y: 68, size: 4, weight: 500, color: 'rgba(255,255,255,.88)' },
+      catatan: { x: 50, y: 73, w: 80, size: 3.4, weight: 500, color: '#F0D678' },                // "sudah check-in sebelumnya"
+      ulang:   { x: 50, y: 93, w: 62, size: 3.4, teks: 'Check in another person' }              // false = sembunyikan
+    }
+  }
 };
-
-// Opsional di layar berhasil (tambahkan ke DESIGN.success di config.js bila ingin menggeser):
-//   catatan: { x: 50, y: 73, w: 80, size: 3.4 }                        // "Anda sudah check-in sebelumnya."
-//   ulang:   { x: 50, y: 93, w: 62, size: 3.4, teks: 'Check in another person' }   // false = sembunyikan
