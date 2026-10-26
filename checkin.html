@@ -216,18 +216,18 @@ function api(a,args){
   var ac=new AbortController(),tm=setTimeout(function(){ac.abort();},30000);
   return fetch(API,{method:'POST',signal:ac.signal,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a:a,args:args||[]})})
     .then(function(r){clearTimeout(tm);return r.text();})
-    .then(function(t){try{return JSON.parse(t);}catch(e){throw new Error('Server tidak mengembalikan data. Pastikan deploy Apps Script: akses = Anyone.');}})
-    .then(function(j){if(!j.ok)throw new Error(j.error||'Gagal menghubungi server');return j.data;})
+    .then(function(t){try{return JSON.parse(t);}catch(e){throw new Error('The server did not return data. Make sure the Apps Script deployment access is set to Anyone.');}})
+    .then(function(j){if(!j.ok)throw new Error(j.error||'Failed to contact the server');return j.data;})
     .catch(function(e){
-      if(e&&e.name==='AbortError')throw new Error('Koneksi lambat. Tekan Check-in lagi: data Anda tidak akan tercatat ganda.');
-      if(e&&e.name==='TypeError')throw new Error('Tidak ada koneksi internet. Coba lagi.');
+      if(e&&e.name==='AbortError')throw new Error('Slow connection. Press Check-in again: your data will not be recorded twice');
+      if(e&&e.name==='TypeError')throw new Error('No internet connection. Please try again.');
       throw e;
     });
 }
 
 function done(r){
-  sN.textContent=r.nama; sD.textContent=r.bagian; sW.textContent='Pukul '+r.waktu;
-  if(sC)sC.textContent=r.again?'Anda sudah check-in sebelumnya.':'';
+  sN.textContent=r.nama; sD.textContent=r.bagian; sW.textContent='At '+r.waktu+' WIB';
+  if(sC)sC.textContent=r.again?'You have already checked in before.':'';
   show(sO); texts.forEach(shrink);
   var f=document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); // kilat
 }
@@ -236,18 +236,18 @@ function buzz(){if(A.VIBRATE&&navigator.vibrate)try{navigator.vibrate(A.VIBRATE)
 function submit(){
   err(''); var body;
   if(tab==='internal'){
-    var k=iK.value.trim(); if(!k)return err('NPK wajib diisi.');
+    var k=iK.value.trim(); if(!k)return err('NPK/Employee ID is required.');
     body=['internal',k];
   }else{
     var n=iN.value.trim(),c=iC.value.trim();
-    if(n.length<2)return err('Nama minimal 2 karakter.');
-    if(!c)return err('Asal perusahaan wajib diisi.');
+    if(n.length<2)return err('Name must be at least 2 characters.');
+    if(!c)return err('Company is required.');
     body=['external',n,c];
   }
-  if(!apiOk)return err('Alamat server belum diatur (CHECKIN_API_URL di config-checkin.js).');
+  if(!apiOk)return err('Server address is not configured (CHECKIN_API_URL in config-checkin.js).');
   busy(true);
   api('checkin',body).then(function(r){busy(false);done(r);})
-    .catch(function(e){busy(false);err((e&&e.message)||'Terjadi kesalahan. Coba lagi.');});
+    .catch(function(e){busy(false);err((e&&e.message)||'An error occurred. Please try again.');});
   return true;
 }
 bT.onclick=function(){if(submit())buzz();}; // getar hanya dari tap tombol (bukan Enter, bukan saat berhasil), dan hanya bila data valid
@@ -260,7 +260,7 @@ if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListen
 setTab('internal');
 if(demo==='ok')done({nama:Q.get('nama')||'Muhammad Al-Fatih',bagian:Q.get('bagian')||'Marketing',waktu:'11:33'});
 else show(sF);
-if(!demo){if(!apiOk)err('Alamat server belum diatur (CHECKIN_API_URL di config-checkin.js).');else api('ping').catch(function(){});} // pemanasan server
+if(!demo){if(!apiOk)err('Server address is not configured (CHECKIN_API_URL in config-checkin.js).');else api('ping').catch(function(){});} // pemanasan server
 Promise.race([Promise.all([sF.ready,sO.ready,fontsReady]),new Promise(function(ok){setTimeout(ok,10000);})]).then(hideLoad);
 })();
 </script>
