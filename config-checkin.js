@@ -28,7 +28,7 @@ window.APP = {
       bleed: 300,
       field:   { bg: 'rgba(255,255,255,.95)', color: '#0A1A3E', border: '#F0D678', radius: 2.4, pad: 2.2, size: 4, weight: 500 },
       tab:     { x: 50, y: 42, w: 80, size: 4, weight: 700, teksInternal: 'Internal', teksExternal: 'External' },
-      npk:     { x: 50, y: 54, w: 80, placeholder: 'NPK (6 digits)', inputmode: 'numeric' },   // 'numeric' bila NPK hanya angka
+      npk:     { x: 50, y: 50, w: 80, placeholder: 'NPK (6 digits)', digits: 6 },   // digits: 6 = hanya angka & tepat 6 digit (hapus bila format NPK lain; boleh pakai inputmode: 'text')
       nama:    { x: 50, y: 50, w: 80, placeholder: 'Full Name' },
       company: { x: 50, y: 58, w: 80, placeholder: 'Company' },
       tombol:  { x: 50, y: 67, w: 62, size: 5, weight: 700, color: '#0A1A3E', bg: '#F0D678', radius: 3.2, pad: 2.4, teks: 'Check-in' },
@@ -39,11 +39,18 @@ window.APP = {
     success: {
       bg: 'checked-in-bg.png',          // desain lama (maskot): ganti ke 'checked-in-bg.webp' dan hapus baris bleed di bawah
       bleed: 300,
-      nama:    { x: 50, y: 51, w: 77, h: 9.2, size: 8, weight: 700, lineHeight: 1.1, lines: 2, min: 3.5 },
-      divisi:  { x: 50, y: 56, w: 84, h: 6,  size: 6, weight: 500, color: '#F0D678', min: 3.2 },
-      waktu:   { x: 50, y: 62, size: 5, weight: 500, color: 'rgba(255,255,255,.88)' },
-      catatan: { x: 50, y: 70, w: 80, size: 4, weight: 500, color: '#F0D678' },                // "sudah check-in sebelumnya"
-      // ulang:   { x: 50, y: 93, w: 62, size: 3.4, teks: 'Check in another person' }              // false = sembunyikan
+      nama:    { x: 50, y: 54, w: 77, h: 9.2, size: 8, weight: 700, lineHeight: 1.1, lines: 2, min: 3.5 },
+      divisi:  { x: 50, y: 60, w: 84, h: 6,  size: 5, weight: 500, color: '#F0D678', min: 3.2 },
+      waktu:   { x: 50, y: 68, size: 4, weight: 500, color: 'rgba(255,255,255,.88)' },
+      catatan: { x: 50, y: 73, w: 80, size: 3.4, weight: 500, color: '#F0D678' },                // "sudah check-in sebelumnya"
+      ulang:   { x: 50, y: 93, w: 62, size: 3.4, teks: 'Check in another person' }              // false = sembunyikan
+    },
+
+    // Tampilan landscape (HP diputar): 2 kolom. Teks di bawah tampil sebagai pengganti teks yang di portrait ada di gambar latar.
+    landscape: {
+      judul: 'SELF CHECK-IN', event: 'EXPERT DAY 2026', sub: 'Select your guest type and fill in your details',
+      suksesJudul: 'CHECK-IN COMPLETED', suksesSub: 'Thank you for coming. Please enjoy the event.'
+      // bg: 'checkin-bg-landscape.png'   // opsional: gambar latar khusus landscape (tanpa ini latar digambar otomatis)
     }
   }
 };
