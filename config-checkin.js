@@ -6,9 +6,6 @@
 //   size = ukuran huruf (persen lebar desain), weight, color, min (huruf terkecil), lines: 2 (nama dipecah 2 baris)
 // Gambar latar: 1080 x 2520 px. 300 px atas & bawah (bleed) hanya tampil di HP yang lebih tinggi dari 16:9,
 //   jadi simpan semua yang penting di area tengah y = 300 s/d 2220. Isi bleed: 0 bila gambar 1080 x 1920.
-// Pratinjau (tambah &grid=1 untuk garis bantu 10%):
-//   .../checkin.html?demo=form     layar isian
-//   .../checkin.html?demo=ok       layar Check-in Completed
 // ======================================================================
 window.APP = {
   CHECKIN_API_URL: 'https://script.google.com/macros/s/AKfycbwshTczi7I7VZ05iLgT8pVOaW2KoO1BySEJJLBghiprZZ5IUOBSarUsjpB3Ty55xDdp/exec',
@@ -28,7 +25,7 @@ window.APP = {
       bleed: 300,
       field:   { bg: 'rgba(255,255,255,.95)', color: '#0A1A3E', border: '#F0D678', radius: 2.4, pad: 2.2, size: 4, weight: 500 },
       tab:     { x: 50, y: 42, w: 80, size: 4, weight: 700, teksInternal: 'Internal', teksExternal: 'External' },
-      npk:     { x: 50, y: 54, w: 80, placeholder: 'NPK (6 digits)', digits: 6 },   // digits: 6 = hanya angka & tepat 6 digit (hapus bila format NPK lain; boleh pakai inputmode: 'text')
+      npk:     { x: 50, y: 50, w: 80, placeholder: 'NPK (6 digits)', digits: 6 },   // digits: 6 = hanya angka & tepat 6 digit (hapus bila format NPK lain; boleh pakai inputmode: 'text')
       nama:    { x: 50, y: 50, w: 80, placeholder: 'Full Name' },
       company: { x: 50, y: 58, w: 80, placeholder: 'Company' },
       tombol:  { x: 50, y: 67, w: 62, size: 5, weight: 700, color: '#0A1A3E', bg: '#F0D678', radius: 3.2, pad: 2.4, teks: 'Check-in' },
@@ -40,17 +37,32 @@ window.APP = {
       bg: 'checked-in-bg.png',          // desain lama (maskot): ganti ke 'checked-in-bg.webp' dan hapus baris bleed di bawah
       bleed: 300,
       nama:    { x: 50, y: 54, w: 77, h: 9.2, size: 8, weight: 700, lineHeight: 1.1, lines: 2, min: 3.5 },
-      divisi:  { x: 50, y: 63, w: 84, h: 6,  size: 5, weight: 500, color: '#F0D678', min: 3.2 },
+      divisi:  { x: 50, y: 60, w: 84, h: 6,  size: 5, weight: 500, color: '#F0D678', min: 3.2 },
       waktu:   { x: 50, y: 68, size: 4, weight: 500, color: 'rgba(255,255,255,.88)' },
-      catatan: { x: 50, y: 73, w: 80, size: 3.4, weight: 500, color: '#F0D678' },                // "sudah check-in sebelumnya"
-      ulang:   { x: 50, y: 93, w: 62, size: 3.4, teks: 'Check in another person' }              // false = sembunyikan
+      catatan: { x: 50, y: 73, w: 80, size: 3.4, weight: 500, color: '#F0D678' }                // "sudah check-in sebelumnya"
     },
 
-    // Tampilan landscape (HP diputar): 2 kolom. Teks di bawah tampil sebagai pengganti teks yang di portrait ada di gambar latar.
+    // Tampilan landscape (HP diputar): kanvas desain 1920 x 1080, gambar latar 2520 x 1080 (300 px kiri & kanan = bleed).
+    // x, y, w, h = persen dari 1920 x 1080 (titik tengah elemen). Ukuran huruf (size) mengikuti pengaturan portrait di atas.
+    // Isi bleed: 0 bila gambar Anda 1920 x 1080 biasa. Kotak kartu di gambar: x 1040-1840, y 130-950 (isian) dan x 1000-1840, y 260-870 (berhasil).
     landscape: {
-      judul: 'SELF CHECK-IN', event: 'EXPERT DAY 2026', sub: 'Select your guest type and fill in your details',
-      suksesJudul: 'CHECK-IN COMPLETED', suksesSub: 'Thank you for coming. Please enjoy the event.'
-      // bg: 'checkin-bg-landscape.png'   // opsional: gambar latar khusus landscape (tanpa ini latar digambar otomatis)
+      width: 1920, height: 1080,
+      form: {
+        bg: 'checkin-bg-landscape.png', bleed: 300,
+        tab:     { x: 75, y: 21.5, w: 35.4 },
+        npk:     { x: 75, y: 34.7, w: 35.4 },
+        nama:    { x: 75, y: 34.7, w: 35.4 },
+        company: { x: 75, y: 48.6, w: 35.4 },
+        tombol:  { x: 75, y: 64,   w: 28 },
+        pesan:   { x: 75, y: 77.3, w: 35.4 }
+      },
+      success: {
+        bg: 'checked-in-bg-landscape.png', bleed: 300,
+        nama:    { x: 74, y: 44, w: 39.6, h: 17 },
+        divisi:  { x: 74, y: 57, w: 40, h: 7 },
+        waktu:   { x: 74, y: 67 },
+        catatan: { x: 74, y: 75, w: 40 }
+      }
     }
   }
 };
