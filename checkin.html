@@ -297,7 +297,7 @@ function api(a,args){
 }
 
 function done(r){
-  sN.textContent=r.nama; sD.textContent=r.bagian; sW.textContent='At '+r.waktu;
+  sN.textContent=r.nama; sD.textContent=r.bagian; sW.textContent='At '+r.waktu+ ' WIB';
   if(sC)sC.textContent=r.again?'You have already checked in before.':'';
   show(sO); texts.forEach(shrink);
   var f=document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); // kilat
