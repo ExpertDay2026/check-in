@@ -28,7 +28,7 @@ window.APP = {
       bleed: 300,
       field:   { bg: 'rgba(255,255,255,.95)', color: '#0A1A3E', border: '#F0D678', radius: 2.4, pad: 2.2, size: 4, weight: 500 },
       tab:     { x: 50, y: 42, w: 80, size: 4, weight: 700, teksInternal: 'Internal', teksExternal: 'External' },
-      npk:     { x: 50, y: 50, w: 80, placeholder: 'NPK (6 digits)', digits: 6 },   // digits: 6 = hanya angka & tepat 6 digit (hapus bila format NPK lain; boleh pakai inputmode: 'text')
+      npk:     { x: 50, y: 54, w: 80, placeholder: 'NPK (6 digits)', digits: 6 },   // digits: 6 = hanya angka & tepat 6 digit (hapus bila format NPK lain; boleh pakai inputmode: 'text')
       nama:    { x: 50, y: 50, w: 80, placeholder: 'Full Name' },
       company: { x: 50, y: 58, w: 80, placeholder: 'Company' },
       tombol:  { x: 50, y: 67, w: 62, size: 5, weight: 700, color: '#0A1A3E', bg: '#F0D678', radius: 3.2, pad: 2.4, teks: 'Check-in' },
