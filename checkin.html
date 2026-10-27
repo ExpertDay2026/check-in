@@ -24,7 +24,6 @@ input.e:focus,button.e:focus-visible,.tab button:focus-visible{box-shadow:0 0 0 
 .tab.drag i{transition:none}
 .tab button{position:relative;z-index:1;background:transparent;color:#fff;transition:color .2s}
 .tab button.on{color:#0A1A3E}
-.lnk{text-decoration:underline;text-underline-offset:.25em}
 @keyframes beat{
 0%,70%,100%{transform:var(--tr) scale(1);box-shadow:0 0 0 0 rgba(240,214,120,0),0 0 calc(var(--u)*1.5) rgba(240,214,120,.3)}
 12%{transform:var(--tr) scale(1.07);box-shadow:0 0 0 calc(var(--u)*.4) rgba(240,214,120,.55),0 0 calc(var(--u)*5) rgba(240,214,120,.85)}
@@ -43,22 +42,9 @@ input.e:focus,button.e:focus-visible,.tab button:focus-visible{box-shadow:0 0 0 
 #conf i{position:absolute;top:-4%;opacity:0;border-radius:1px;animation:cf 2.2s ease-in forwards}
 @keyframes cf{0%{opacity:1;transform:translate(0,0) rotate(0)}85%{opacity:1}100%{opacity:0;transform:translate(var(--dx),110vh) rotate(var(--r))}}
 button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.ls{position:absolute;top:0;right:0;bottom:0;left:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr);align-items:center;column-gap:calc(var(--u)*5);padding:max(env(safe-area-inset-top),8px) max(env(safe-area-inset-right),calc(var(--u)*6)) max(env(safe-area-inset-bottom),8px) max(env(safe-area-inset-left),calc(var(--u)*6));background:radial-gradient(55% 90% at 25% 45%,rgba(40,140,255,.38),transparent 70%),linear-gradient(rgba(40,120,220,.12) 1px,transparent 1px) 0 0/calc(var(--u)*6) calc(var(--u)*6),linear-gradient(90deg,rgba(40,120,220,.12) 1px,transparent 1px) 0 0/calc(var(--u)*6) calc(var(--u)*6),linear-gradient(165deg,#06123a,#0A1A3E 55%,#0e3170)}
-.lb{display:flex;flex-direction:column;align-items:center;text-align:center;gap:calc(var(--u)*1.5);min-width:0}
-.lb svg{width:calc(var(--u)*20);height:calc(var(--u)*20);filter:drop-shadow(0 0 calc(var(--u)*3) rgba(60,170,255,.7))}
-.lb h1{margin:0;font-size:calc(var(--u)*6);line-height:1.1;font-weight:700;text-shadow:0 1px 8px rgba(0,0,0,.55)}
-.lb b{color:#F0D678;font-size:calc(var(--u)*3.6);letter-spacing:calc(var(--u)*.9);font-weight:700}
-.lb p{margin:0;font-size:calc(var(--u)*3);line-height:1.35;color:rgba(190,215,255,.95);max-width:90%}
-.lc{align-self:stretch;min-height:0;min-width:0;overflow-y:auto;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch}
-.lcard{margin:auto;width:100%;max-width:calc(var(--u)*87);padding:calc(var(--u)*3.2);border:calc(var(--u)*.4) solid rgba(70,170,240,.9);border-radius:calc(var(--u)*4);background:rgba(4,22,68,.78);box-shadow:0 0 calc(var(--u)*4) rgba(60,170,255,.35)}
-.lcard .e{--tr:translate(0,0);position:static;transform:none;width:100%!important;white-space:normal!important;margin:0 0 calc(var(--u)*2);text-wrap:balance}
-.lcard .tab{position:relative;left:0!important;top:0!important}
-.lcard button.beat{margin-top:calc(var(--u)*1.6)}
-.lcard .e:last-child{margin-bottom:0}
 #load{position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0A1A3E;color:rgba(255,255,255,.85);font-size:14px;transition:opacity .3s}
 .sp{width:34px;height:34px;border-radius:50%;border:3px solid rgba(240,214,120,.25);border-top-color:#F0D678;animation:spin .9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.grid{position:absolute;top:0;right:0;bottom:0;left:0;z-index:9;pointer-events:none;background-image:linear-gradient(rgba(255,0,60,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(255,0,60,.45) 1px,transparent 1px);background-size:10% 10%}
 </style>
 </head>
 <body>
@@ -73,10 +59,10 @@ addEventListener("error",_nl);setTimeout(_nl,20000);</script>
 <script src="config-checkin.js"></script>
 <script>
 (function(){
-var A=window.APP||{}, D=A.DESIGN||{}, Q=new URLSearchParams(location.search), demo=Q.get('demo');
+var A=window.APP||{}, D=A.DESIGN||{}, LD=D.landscape||{}, LF=LD.form||{}, LO=LD.success||{};
 var API=A.CHECKIN_API_URL||A.API_URL||'', apiOk=/^https:\/\/script\.google\.com\/.+\/exec$/.test(API);
-var stage=document.getElementById('stage'), DW=D.width||1080, DH=D.height||1920, F=D.form||{}, O=D.success||{};
-var screens=[], texts=[], lastW=0, tab='internal', _cx, land=false, sending=false;
+var stage=document.getElementById('stage'), DW=D.width||1080, DH=D.height||1920, LW=LD.width||1920, LH=LD.height||1080, F=D.form||{}, O=D.success||{};
+var screens=[], texts=[], lastW=0, tab='internal', _cx, land=false, sending=false, offShown=false;
 document.documentElement.style.background=document.body.style.background=D.letterbox||'#0A1A3E';
 stage.style.fontFamily=D.font||'system-ui,sans-serif'; stage.style.color=D.color||'#fff';
 
@@ -91,31 +77,32 @@ if(D.fontUrl){
 }
 function hideLoad(){var l=document.getElementById('load');if(!l)return;l.style.opacity='0';setTimeout(function(){if(l.parentNode)l.parentNode.removeChild(l);},350);}
 
-/* kanvas 1080x1920 diskalakan muat layar; --u = 1% lebar desain */
+/* Portrait: kanvas 1080x1920 (gambar 1080x2520, bleed atas/bawah). Landscape: kanvas 1920x1080 (gambar 2520x1080, bleed kiri/kanan).
+   --u = 1% lebar desain portrait, dipakai di kedua orientasi, jadi 'size' di config berlaku sama. */
 function fit(){
   var de=document.documentElement,a=document.activeElement,VW=de.clientWidth||innerWidth||360;
-  if(a&&a.tagName==='INPUT'&&VW===lastW)return; // keyboard Android jangan mengecilkan kanvas
+  if(a&&a.tagName==='INPUT'&&VW===lastW)return; // keyboard Android jangan mengubah tata letak
   lastW=VW; var VH=innerHeight||de.clientHeight||640; stage.style.height=VH+'px';
-  var wasLand=land; land=VW>VH*1.1; // HP diputar landscape (atau jendela lebar): tata letak 2 kolom
-  if(land){var cw=Math.min(VW*.46,560); ls.style.setProperty('--u',Math.max(2.2,Math.min(cw/87,(VH-16)/64))+'px');}
-  if(land!==wasLand)arrange();
+  var was=land; land=VW>VH*1.1; if(land!==was)arrange();
   screens.forEach(function(s){
-    var b=s.bleed,kw=VW/DW,kh=VH/DH,k=kw<=kh?Math.max(kw,VH/(DH+2*b)):kh;
+    var b=s.bleed,dw=s.dw,dh=s.dh,kw=VW/dw,kh=VH/dh,k;
+    if(s.hz)k=kh<=kw?Math.max(kh,VW/(dw+2*b)):kw; else k=kw<=kh?Math.max(kw,VH/(dh+2*b)):kh;
     s.style.setProperty('--u',(DW*k/100)+'px');
-    s.cv.style.width=(DW*k)+'px'; s.cv.style.height=(DH*k)+'px';
-    if(s.art)s.style.backgroundSize=(DW*k)+'px '+((DH+2*b)*k)+'px';
+    s.cv.style.width=(dw*k)+'px'; s.cv.style.height=(dh*k)+'px';
+    if(s.art)s.style.backgroundSize=s.hz?((dw+2*b)*k)+'px '+(dh*k)+'px':(dw*k)+'px '+((dh+2*b)*k)+'px';
   });
   texts.forEach(shrink);
 }
 var u=function(n){return 'calc(var(--u) * '+n+')';};
 
-function mk(sc,tag,def,over){
+function pos(e,c){ // posisi & ukuran huruf sesuai orientasi
+  var s=e.style; e._c=c; s.left=c.x+'%'; s.top=c.y+'%'; s.width=c.w?c.w+'%':''; s.whiteSpace='';
+  if(c.size)s.fontSize=e.tagName==='INPUT'?'max(16px,'+u(c.size)+')':u(c.size); // 16px: cegah zoom otomatis iOS
+}
+function mk(sc,tag,def,over,lo){ // lo = posisi khusus landscape (x, y, w, h)
   if(over===false)return null;
   var c=Object.assign({},def,over),e=document.createElement(tag),s=e.style;
-  e.className='e'; e._c=c;
-  s.left=c.x+'%'; s.top=c.y+'%';
-  if(c.w)s.width=c.w+'%';
-  if(c.size)s.fontSize=tag==='input'?'max(16px,'+u(c.size)+')':u(c.size); // 16px: cegah zoom otomatis iOS
+  e.className='e'; e._cp=c; e._cl=Object.assign({},c,lo);
   if(c.weight)s.fontWeight=c.weight;
   if(c.color)s.color=c.color;
   if(c.font)s.fontFamily=c.font;
@@ -131,18 +118,22 @@ function mk(sc,tag,def,over){
   if(c.border)s.border=u(.3)+' solid '+c.border;
   if(c.teks)e.textContent=c.teks;
   if(c.placeholder){e.placeholder=c.placeholder;e.setAttribute('aria-label',c.placeholder);}
-  if(c.h||c.lines>1)texts.push(e);
+  pos(e,c);
+  if(c.h||c.lines>1||e._cl.h||e._cl.lines>1)texts.push(e);
   sc.cv.appendChild(e); return e;
 }
-function mkScreen(c){
+function mkScreen(c,hz){
   var sc=document.createElement('section'),cv=document.createElement('div');
-  sc.className='scr'; sc.hidden=true; cv.className='cv'; sc.appendChild(cv); sc.cv=cv;
-  sc.art=!!c.bg; sc.bleed=c.bg?Math.max(0,+c.bleed||0):0; sc.ready=Promise.resolve();
+  sc.className='scr'; sc.hidden=true; cv.className='cv'; sc.appendChild(cv); sc.cv=cv; sc.hz=!!hz;
+  sc.dw=hz?LW:DW; sc.dh=hz?LH:DH; sc.art=!!c.bg; sc.bleed=c.bg?Math.max(0,+c.bleed||0):0; sc.ready=Promise.resolve();
   if(c.bg){
     sc.style.backgroundImage='url("'+c.bg+'")'; sc.style.backgroundColor=D.letterbox||'#0A1A3E';
     sc.ready=new Promise(function(ok){ // bleed otomatis dari ukuran gambar bila 'bleed' tidak diisi
       var im=new Image(); im.onerror=ok;
-      im.onload=function(){if(c.bleed==null&&im.naturalWidth){sc.bleed=Math.max(0,(im.naturalHeight*DW/im.naturalWidth-DH)/2);fit();}ok();};
+      im.onload=function(){
+        if(c.bleed==null&&im.naturalWidth){sc.bleed=Math.max(0,(hz?im.naturalWidth*LH/im.naturalHeight-LW:im.naturalHeight*DW/im.naturalWidth-DH)/2);fit();}
+        ok();
+      };
       im.src=c.bg;
     });
   }
@@ -151,7 +142,6 @@ function mkScreen(c){
 
 /* teks: nama panjang dipecah 2 baris seimbang & dikecilkan; 'h' = tinggi maksimum (% tinggi desain) */
 function shrink(el){
-  if(land)return;
   var c=el._c,cv=el.parentNode,H=cv.clientHeight,W=el.clientWidth; if(!c||!H||!W)return;
   if(c.lines>1)return fitName(el,c,H,W);
   if(!c.h)return;
@@ -179,57 +169,44 @@ function fitName(el,c,H,W){
   el.style.top=c.y2!=null?c.y2+'%':(bottom-el.offsetHeight/2)+'px';
 }
 
-/* ---------- layar 1: form ---------- */
-var sF=mkScreen(F),sO=mkScreen(O),SH='0 1px 8px rgba(0,0,0,.55)';
+/* ---------- layar: portrait (sF, sO) dan landscape (sFL, sOL) ---------- */
+var sF=mkScreen(F),sO=mkScreen(O),sFL=mkScreen(LF,true),sOL=mkScreen(LO,true),SH='0 1px 8px rgba(0,0,0,.55)';
 var FIELD=Object.assign({bg:'rgba(255,255,255,.95)',color:'#0A1A3E',border:'#F0D678',radius:2.4,pad:2.2,size:4,weight:500},F.field);
 var BTN={size:5,weight:700,color:'#0A1A3E',bg:'#F0D678',radius:3.2,pad:2.4};
 var TB=Object.assign({x:50,y:42,w:80,size:4,weight:700,teksInternal:'Internal',teksExternal:'External'},F.tab);
-var tb=mk(sF,'div',{x:TB.x,y:TB.y,w:TB.w,size:TB.size,weight:TB.weight}); tb.classList.add('tab');
+var L=function(d,o){return Object.assign(d,o);};
+var tb=mk(sF,'div',{x:TB.x,y:TB.y,w:TB.w,size:TB.size,weight:TB.weight},undefined,L({x:75,y:21.5,w:35.4},LF.tab)); tb.classList.add('tab');
 var th=document.createElement('i'),bI=document.createElement('button'),bE=document.createElement('button'); // th = tombol emas yang meluncur
 tb.setAttribute('role','radiogroup'); tb.style.borderColor=FIELD.border||'#F0D678'; tb.appendChild(th);
 [[bI,TB.teksInternal],[bE,TB.teksExternal]].forEach(function(p){
   var b=p[0]; b.type='button'; b.textContent=p[1]; b.setAttribute('role','radio'); b.style.padding=u(1)+' '+u(1);
   tb.appendChild(b);
 });
-var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'NPK (6 digits)'}),F.npk);
-var iN=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'Full Name'}),F.nama);
-var iC=mk(sF,'input',Object.assign({},FIELD,{x:50,y:58,w:80,placeholder:'Company'}),F.company);
+var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'NPK (6 digits)'}),F.npk,L({x:75,y:34.7,w:35.4},LF.npk));
+var iN=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'Full Name'}),F.nama,L({x:75,y:34.7,w:35.4},LF.nama));
+var iC=mk(sF,'input',Object.assign({},FIELD,{x:50,y:58,w:80,placeholder:'Company'}),F.company,L({x:75,y:48.6,w:35.4},LF.company));
 var ND=+(F.npk&&F.npk.digits)||0; // digits: 6 => hanya angka, tepat 6 digit
 iK.type=iN.type=iC.type='text'; iK.autocomplete='off'; iK.autocapitalize='characters'; iK.maxLength=ND||30;
 iK.setAttribute('inputmode',ND?'numeric':((F.npk&&F.npk.inputmode)||'text'));
 iN.autocomplete='name'; iN.maxLength=80; iC.autocomplete='organization'; iC.maxLength=80;
 iK.setAttribute('enterkeyhint','go'); iN.setAttribute('enterkeyhint','next'); iC.setAttribute('enterkeyhint','go');
-var bT=mk(sF,'button',Object.assign({x:50,y:69,w:62,teks:'Check-in'},BTN),F.tombol); bT.type='button'; bT.classList.add('beat');
-var eE=mk(sF,'div',{x:50,y:76,w:80,size:3.4,weight:500,color:'#ffb4b4',lineHeight:1.3,shadow:SH},F.pesan);
+var bT=mk(sF,'button',Object.assign({x:50,y:69,w:62,teks:'Check-in'},BTN),F.tombol,L({x:75,y:64,w:28},LF.tombol)); bT.type='button'; bT.classList.add('beat');
+var eE=mk(sF,'div',{x:50,y:76,w:80,size:3.4,weight:500,color:'#ffb4b4',lineHeight:1.3,shadow:SH},F.pesan,L({x:75,y:77.3,w:35.4},LF.pesan));
 var lbT=bT.textContent;
 
-/* ---------- layar 2: Check-in Completed (memakai DESIGN.success) ---------- */
-var sN=mk(sO,'div',{x:50,y:54,w:77,h:9.2,size:8,weight:700,lineHeight:1.1,lines:2,min:3.5},O.nama);
-var sD=mk(sO,'div',{x:50,y:60,w:84,h:6,size:5,weight:500,color:'#F0D678',min:3.2},O.divisi);
-var sW=mk(sO,'div',{x:50,y:68,size:4,weight:500,color:'rgba(255,255,255,.88)'},O.waktu);
-var sC=mk(sO,'div',{x:50,y:73,w:80,size:3.4,weight:500,color:'#F0D678'},O.catatan);
-var bU=mk(sO,'button',{x:50,y:93,w:62,size:3.4,weight:500,color:'rgba(255,255,255,.8)',bg:'transparent',shadow:SH,teks:'Check in another person'},O.ulang);
-if(bU){bU.type='button';bU.classList.add('lnk');bU.onclick=function(){iK.value=iN.value=iC.value='';err('');show(sF);};}
+var sN=mk(sO,'div',{x:50,y:54,w:77,h:9.2,size:8,weight:700,lineHeight:1.1,lines:2,min:3.5},O.nama,L({x:74,y:44,w:39.6,h:17},LO.nama));
+var sD=mk(sO,'div',{x:50,y:60,w:84,h:6,size:5,weight:500,color:'#F0D678',min:3.2},O.divisi,L({x:74,y:57,w:40,h:7},LO.divisi));
+var sW=mk(sO,'div',{x:50,y:68,size:4,weight:500,color:'rgba(255,255,255,.88)'},O.waktu,L({x:74,y:67},LO.waktu));
+var sC=mk(sO,'div',{x:50,y:73,w:80,size:3.4,weight:500,color:'#F0D678'},O.catatan,L({x:74,y:75,w:40},LO.catatan));
 
-/* ---------- landscape: 2 kolom (kiri judul, kanan kartu isian). Elemen yang sama dipindah ke kartu, jadi isian tidak terduplikasi ---------- */
-var LS=Object.assign({judul:'SELF CHECK-IN',event:'EXPERT DAY 2026',sub:'Select your guest type and fill in your details',suksesJudul:'CHECK-IN COMPLETED',suksesSub:'Thank you for coming. Please enjoy the event.',bg:''},D.landscape);
-var ls=document.createElement('section'); ls.className='ls'; ls.hidden=true;
-ls.innerHTML='<div class="lb"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="none" stroke="#F0D678" stroke-opacity=".75" stroke-width="2"/><circle cx="100" cy="100" r="78" fill="#0E4296" stroke="#50AFF0" stroke-width="7"/><path d="M62 104l27 27 50-60" fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg><h1></h1><b></b><p></p></div><div class="lc"><div class="lcard"></div></div>';
-stage.appendChild(ls);
-if(LS.bg)ls.style.background='#0A1A3E url("'+LS.bg+'") center/cover no-repeat';
-var lcard=ls.querySelector('.lcard'),lh=ls.querySelector('h1'),lbd=ls.querySelector('b'),lp=ls.querySelector('p');
-var formEls=[tb,iK,iN,iC,bT,eE],okEls=[sN,sD,sW,sC,bU].filter(Boolean),curS=sF;
+/* elemen yang sama dipindah antara kanvas portrait dan landscape (isian tidak terduplikasi) */
+var formEls=[tb,iK,iN,iC,bT,eE],okEls=[sN,sD,sW,sC].filter(Boolean),curS=sF;
 function arrange(){
   var ok=curS===sO;
-  if(land){
-    (ok?formEls:okEls).forEach(function(e){(ok?sF:sO).cv.appendChild(e);}); // set yang tidak dipakai kembali ke kanvasnya
-    (ok?okEls:formEls).forEach(function(e){lcard.appendChild(e);});
-    lh.textContent=ok?LS.suksesJudul:LS.judul; lbd.textContent=LS.event; lp.textContent=ok?LS.suksesSub:LS.sub;
-    texts.forEach(function(e){e.style.fontSize=u(e._c.size||4);e.style.whiteSpace='';}); // batalkan pengecilan huruf mode portrait
-  }else{
-    formEls.forEach(function(e){sF.cv.appendChild(e);}); okEls.forEach(function(e){sO.cv.appendChild(e);});
-  }
-  ls.hidden=!land; sF.hidden=land||ok; sO.hidden=land||!ok;
+  [[formEls,land?sFL:sF],[okEls,land?sOL:sO]].forEach(function(p){
+    p[0].forEach(function(e){if(e.parentNode!==p[1].cv)p[1].cv.appendChild(e);pos(e,land?e._cl:e._cp);});
+  });
+  sF.hidden=land||ok; sO.hidden=land||!ok; sFL.hidden=!land||ok; sOL.hidden=!land||!ok;
 }
 function show(s){curS=s;arrange();}
 /* pesan galat: field terkait bergetar & bergaris merah supaya terlihat */
@@ -242,8 +219,8 @@ function offline(){return navigator.onLine===false;}
 function busy(on){sending=on;bT.disabled=on||offline();bT.textContent=on?'Sending…':lbT;}
 function net(){ // tombol mati & pesan jelas saat HP offline; pulih sendiri saat sinyal kembali
   bT.disabled=sending||offline();
-  if(offline())err('No internet connection. Connect first, then press Check-in.');
-  else if(/koneksi internet/.test(eE.textContent))err('');
+  if(offline()){err('No internet connection. Connect first, then press Check-in.');offShown=true;}
+  else if(offShown){err('');offShown=false;}
 }
 addEventListener('online',net); addEventListener('offline',net);
 function confetti(){ // semburan konfeti emas saat berhasil
@@ -259,6 +236,7 @@ function confetti(){ // semburan konfeti emas saat berhasil
   }
   setTimeout(function(){c.textContent='';},3800);
 }
+
 function setTab(t){
   tab=t; iK.hidden=t!=='internal'; iN.hidden=iC.hidden=t==='internal'; err('');
   tb.classList.toggle('ext',t==='external');
@@ -288,10 +266,13 @@ function api(a,args){
   return fetch(API,{method:'POST',signal:ac.signal,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a:a,args:args||[]})})
     .then(function(r){clearTimeout(tm);return r.text();})
     .then(function(t){try{return JSON.parse(t);}catch(e){throw new Error('The server did not return data. Make sure the Apps Script deployment access is set to Anyone.');}})
-    .then(function(j){if(!j.ok)throw new Error(j.error||'Failed to contact the server');return j.data;})
+    .then(function(j){
+      if(!j.ok){var er=new Error(j.error||'Failed to contact the server'); er.retry=/padat|busy/i.test(er.message); throw er;} // server padat: boleh dicoba lagi otomatis
+      return j.data;
+    })
     .catch(function(e){
       if(e&&e.name==='AbortError')throw new Error('Slow connection. Press Check-in again: your data will not be recorded twice.');
-      if(e&&e.name==='TypeError')throw new Error('No internet connection. Please refresh the page and try again.');
+      if(e&&e.name==='TypeError'){var er=new Error('No internet connection. Please refresh the page and try again.'); er.retry=true; throw er;}
       throw e;
     });
 }
@@ -307,7 +288,7 @@ function buzz(){if(A.VIBRATE&&navigator.vibrate)try{navigator.vibrate(A.VIBRATE)
 
 function send(body,n){ // coba lagi otomatis (maks 2x) bila server padat / sinyal putus; aman karena server menolak data ganda
   return api('checkin',body).catch(function(e){
-    if(n<2&&/padat|koneksi internet/i.test((e&&e.message)||''))return new Promise(function(r){setTimeout(r,1200*(n+1));}).then(function(){return send(body,n+1);});
+    if(n<2&&e&&e.retry)return new Promise(function(r){setTimeout(r,1200*(n+1));}).then(function(){return send(body,n+1);});
     throw e;
   });
 }
@@ -327,7 +308,7 @@ function submit(){
   if(!apiOk)return err('Server address is not configured (CHECKIN_API_URL in config-checkin.js).');
   busy(true);
   send(body,0).then(function(r){busy(false);done(r);})
-    .catch(function(e){busy(false);var m=(e&&e.message)||'An error occurred. Please refresh the page and try again.';err(m,/^NPK/.test(m)?[iK]:/^Nama/.test(m)?[iN]:/perusahaan/.test(m)?[iC]:null);});
+    .catch(function(e){busy(false);var m=(e&&e.message)||'An error occurred. Please refresh the page and try again.';err(m,/^NPK/i.test(m)?[iK]:/^(Nama|Name)/i.test(m)?[iN]:/(perusahaan|company)/i.test(m)?[iC]:null);});
   return true;
 }
 bT.onclick=function(){if(submit())buzz();}; // getar hanya dari tap tombol (bukan Enter, bukan saat berhasil), dan hanya bila data valid
@@ -338,15 +319,12 @@ bT.onclick=function(){if(submit())buzz();}; // getar hanya dari tap tombol (buka
 iK.addEventListener('input',function(){if(ND)iK.value=iK.value.replace(/\D/g,'').slice(0,ND);}); // NPK: hanya angka
 
 /* ---------- mulai ---------- */
-if(Q.get('grid')==='1')screens.forEach(function(sc){var g=document.createElement('div');g.className='grid';sc.cv.appendChild(g);});
 fit(); addEventListener('resize',fit); addEventListener('orientationchange',fit); addEventListener('load',fit); addEventListener('pageshow',fit);
 if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',fit);
-setTab('internal');
-if(demo==='ok')done({nama:Q.get('nama')||'Muhammad Al-Fatih',bagian:Q.get('bagian')||'Marketing',waktu:'11:33'});
-else show(sF);
-if(!demo){if(!apiOk)err('Server address is not configured (CHECKIN_API_URL in config-checkin.js).');else api('ping').catch(function(){});} // pemanasan server
+setTab('internal'); show(sF);
+if(!apiOk)err('Server address is not configured (CHECKIN_API_URL in config-checkin.js).');else api('ping').catch(function(){}); // pemanasan server
 if(offline())net();
-Promise.race([Promise.all([sF.ready,sO.ready,fontsReady]),new Promise(function(ok){setTimeout(ok,10000);})]).then(hideLoad);
+Promise.race([Promise.all([(land?sFL:sF).ready,fontsReady]),new Promise(function(ok){setTimeout(ok,10000);})]).then(hideLoad);
 })();
 </script>
 </body>
