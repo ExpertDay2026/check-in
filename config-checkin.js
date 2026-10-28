@@ -49,19 +49,19 @@ window.APP = {
       width: 1920, height: 1080,
       form: {
         bg: 'checkin-bg-landscape.png', bleed: 300,
-        tab:     { x: 68.75, y: 33.4, w: 50 },
-        npk:     { x: 68.75, y: 45.6, w: 50 },        // Internal: satu kolom lebar
-        nama:    { x: 55.9,  y: 45.6, w: 24.4 },      // External: Full Name (kiri) dan Company (kanan) berdampingan
-        company: { x: 81.6,  y: 45.6, w: 24.4 },
-        tombol:  { x: 68.75, y: 59.3, w: 50 },
-        pesan:   { x: 68.75, y: 69.9, w: 50 }
+        tab:     { x: 70.5, y: 33.4, w: 50 },
+        npk:     { x: 70.5, y: 45.6, w: 50 },
+        nama:    { x: 57.7, y: 45.6, w: 24.4 },
+        company: { x: 83.3, y: 45.6, w: 24.4 },
+        tombol:  { x: 70.5, y: 63.0, w: 50 },
+        pesan:   { x: 70.5, y: 73.5, w: 50 }
       },
       success: {
         bg: 'checked-in-bg-landscape.png', bleed: 300,
-        nama:    { x: 74, y: 44, w: 39.6, h: 17 },
-        divisi:  { x: 74, y: 57, w: 40, h: 7 },
-        waktu:   { x: 74, y: 67 },
-        catatan: { x: 74, y: 75, w: 40 }
+        nama:    { x: 70.5, y: 44, w: 50, h: 17 },
+        divisi:  { x: 70.5, y: 57, w: 50, h: 7 },
+        waktu:   { x: 70.5, y: 67 },
+        catatan: { x: 70.5, y: 75, w: 50 }
       }
     }
   }
