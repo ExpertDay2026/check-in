@@ -48,7 +48,7 @@ window.APP = {
     landscape: {
       width: 1920, height: 1080,
       form: {
-        bg: 'checkin-bg-landscape.png', bleed: 300,
+        bg: 'checkin-bg-landscape.webp', bleed: 300,
         tab:     { x: 70.5, y: 33.4, w: 50 },
         npk:     { x: 70.5, y: 45.6, w: 50 },
         nama:    { x: 57.7, y: 45.6, w: 24.4 },
@@ -57,7 +57,7 @@ window.APP = {
         pesan:   { x: 70.5, y: 73.5, w: 50 }
       },
       success: {
-        bg: 'checked-in-bg-landscape.png', bleed: 300,
+        bg: 'checked-in-bg-landscape.webp', bleed: 300,
         nama:    { x: 70.5, y: 44, w: 50, h: 17 },
         divisi:  { x: 70.5, y: 57, w: 50, h: 7 },
         waktu:   { x: 70.5, y: 67 },
