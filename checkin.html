@@ -99,7 +99,7 @@ function pos(e,c){ // posisi & ukuran huruf sesuai orientasi
   var s=e.style; e._c=c; s.left=c.x+'%'; s.top=c.y+'%'; s.width=c.w?c.w+'%':''; s.whiteSpace='';
   if(c.size)s.fontSize=e.tagName==='INPUT'?'max(16px,'+u(c.size)+')':u(c.size); // 16px: cegah zoom otomatis iOS
 }
-function mk(sc,tag,def,over,lo){ // lo = posisi khusus landscape (x, y, w, h)
+function mk(sc,tag,def,over,lo){ // lo = posisi khusus  (x, y, w, h)
   if(over===false)return null;
   var c=Object.assign({},def,over),e=document.createElement(tag),s=e.style;
   e.className='e'; e._cp=c; e._cl=Object.assign({},c,lo);
@@ -169,29 +169,29 @@ function fitName(el,c,H,W){
   el.style.top=c.y2!=null?c.y2+'%':(bottom-el.offsetHeight/2)+'px';
 }
 
-/* ---------- layar: portrait (sF, sO) dan landscape (sFL, sOL) ---------- */
+/* ---------- layar: portrait (sF, sO) dan  (sFL, sOL) ---------- */
 var sF=mkScreen(F),sO=mkScreen(O),sFL=mkScreen(LF,true),sOL=mkScreen(LO,true),SH='0 1px 8px rgba(0,0,0,.55)';
 var FIELD=Object.assign({bg:'rgba(255,255,255,.95)',color:'#0A1A3E',border:'#F0D678',radius:2.4,pad:2.2,size:4,weight:500},F.field);
 var BTN={size:5,weight:700,color:'#0A1A3E',bg:'#F0D678',radius:3.2,pad:2.4};
 var TB=Object.assign({x:50,y:42,w:80,size:4,weight:700,teksInternal:'Internal',teksExternal:'External'},F.tab);
 var L=function(d,o){return Object.assign(d,o);};
-var tb=mk(sF,'div',{x:TB.x,y:TB.y,w:TB.w,size:TB.size,weight:TB.weight},undefined,L({x:75,y:21.5,w:35.4},LF.tab)); tb.classList.add('tab');
+var tb=mk(sF,'div',{x:TB.x,y:TB.y,w:TB.w,size:TB.size,weight:TB.weight},undefined,L({x:68.75,y:33.4,w:50},LF.tab)); tb.classList.add('tab');
 var th=document.createElement('i'),bI=document.createElement('button'),bE=document.createElement('button'); // th = tombol emas yang meluncur
 tb.setAttribute('role','radiogroup'); tb.style.borderColor=FIELD.border||'#F0D678'; tb.appendChild(th);
 [[bI,TB.teksInternal],[bE,TB.teksExternal]].forEach(function(p){
   var b=p[0]; b.type='button'; b.textContent=p[1]; b.setAttribute('role','radio'); b.style.padding=u(1)+' '+u(1);
   tb.appendChild(b);
 });
-var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'NPK (6 digits)'}),F.npk,L({x:75,y:34.7,w:35.4},LF.npk));
-var iN=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'Full Name'}),F.nama,L({x:75,y:34.7,w:35.4},LF.nama));
-var iC=mk(sF,'input',Object.assign({},FIELD,{x:50,y:58,w:80,placeholder:'Company'}),F.company,L({x:75,y:48.6,w:35.4},LF.company));
+var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'NPK (6 digits)'}),F.npk,L({x:68.75,y:45.6,w:50},LF.npk));
+var iN=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'Full Name'}),F.nama,L({x:55.9,y:45.6,w:24.4},LF.nama));
+var iC=mk(sF,'input',Object.assign({},FIELD,{x:50,y:58,w:80,placeholder:'Company'}),F.company,L({x:81.6,y:45.6,w:24.4},LF.company));
 var ND=+(F.npk&&F.npk.digits)||0; // digits: 6 => hanya angka, tepat 6 digit
 iK.type=iN.type=iC.type='text'; iK.autocomplete='off'; iK.autocapitalize='characters'; iK.maxLength=ND||30;
 iK.setAttribute('inputmode',ND?'numeric':((F.npk&&F.npk.inputmode)||'text'));
 iN.autocomplete='name'; iN.maxLength=80; iC.autocomplete='organization'; iC.maxLength=80;
 iK.setAttribute('enterkeyhint','go'); iN.setAttribute('enterkeyhint','next'); iC.setAttribute('enterkeyhint','go');
-var bT=mk(sF,'button',Object.assign({x:50,y:69,w:62,teks:'Check-in'},BTN),F.tombol,L({x:75,y:64,w:28},LF.tombol)); bT.type='button'; bT.classList.add('beat');
-var eE=mk(sF,'div',{x:50,y:76,w:80,size:3.4,weight:500,color:'#ffb4b4',lineHeight:1.3,shadow:SH},F.pesan,L({x:75,y:77.3,w:35.4},LF.pesan));
+var bT=mk(sF,'button',Object.assign({x:50,y:69,w:62,teks:'Check-in'},BTN),F.tombol,L({x:68.75,y:59.3,w:50},LF.tombol)); bT.type='button'; bT.classList.add('beat');
+var eE=mk(sF,'div',{x:50,y:76,w:80,size:3.4,weight:500,color:'#ffb4b4',lineHeight:1.3,shadow:SH},F.pesan,L({x:68.75,y:69.9,w:50},LF.pesan));
 var lbT=bT.textContent;
 
 var sN=mk(sO,'div',{x:50,y:54,w:77,h:9.2,size:8,weight:700,lineHeight:1.1,lines:2,min:3.5},O.nama,L({x:74,y:44,w:39.6,h:17},LO.nama));
