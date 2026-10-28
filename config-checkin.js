@@ -49,12 +49,12 @@ window.APP = {
       width: 1920, height: 1080,
       form: {
         bg: 'checkin-bg-landscape.png', bleed: 300,
-        tab:     { x: 75, y: 21.5, w: 35.4 },
-        npk:     { x: 75, y: 34.7, w: 35.4 },
-        nama:    { x: 75, y: 34.7, w: 35.4 },
-        company: { x: 75, y: 48.6, w: 35.4 },
-        tombol:  { x: 75, y: 64,   w: 28 },
-        pesan:   { x: 75, y: 77.3, w: 35.4 }
+        tab:     { x: 68.75, y: 33.4, w: 50 },
+        npk:     { x: 68.75, y: 45.6, w: 50 },        // Internal: satu kolom lebar
+        nama:    { x: 55.9,  y: 45.6, w: 24.4 },      // External: Full Name (kiri) dan Company (kanan) berdampingan
+        company: { x: 81.6,  y: 45.6, w: 24.4 },
+        tombol:  { x: 68.75, y: 59.3, w: 50 },
+        pesan:   { x: 68.75, y: 69.9, w: 50 }
       },
       success: {
         bg: 'checked-in-bg-landscape.png', bleed: 300,
