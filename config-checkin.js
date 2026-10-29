@@ -51,7 +51,7 @@ window.APP = {
       form: {
         bg: 'checkin-bg-landscape.webp', bleed: 300,
         tab:     { x: 70.5, y: 33.4, w: 50 },
-        lokasi:  { x: 70.5, y: 45.0, w: 40, size: 2.8, padY: 1.0},
+        lokasi:  { x: 70.5, y: 43.0, w: 40, size: 2.8, padY: 1.0},
         npk:     { x: 70.5, y: 54.0, w: 50 },        
         nama:    { x: 57.7, y: 48.0, w: 24.4 },      
         company: { x: 83.3, y: 48.0, w: 24.4 },      
