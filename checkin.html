@@ -24,9 +24,9 @@ input.e:focus,button.e:focus-visible,.tab button:focus-visible{box-shadow:0 0 0 
 .tab.drag i{transition:none}
 .tab button{position:relative;z-index:1;background:transparent;color:#fff;transition:color .2s}
 .tab button.on{color:#0A1A3E}
-/* Pill kecil untuk radio lokasi (Karawang/Semarang); pakai absolute agar tidak mengganggu flow tab utama */
-.tab.loc{position:absolute;padding:calc(var(--u)*.3);border-radius:calc(var(--u)*2.8)}
-.tab.loc i{top:calc(var(--u)*.3);bottom:calc(var(--u)*.3);left:calc(var(--u)*.3);width:calc(50% - var(--u)*.3);border-radius:calc(var(--u)*2.4)}
+/* Pill kecil untuk radio lokasi; --lpy bisa di-override via config 'padY' (default .3u) */
+.tab.loc{--lpy:calc(var(--u)*.3);position:absolute;padding:var(--lpy) calc(var(--u)*.3);border-radius:calc(var(--u)*2.8)}
+.tab.loc i{top:var(--lpy);bottom:var(--lpy);left:calc(var(--u)*.3);width:calc(50% - var(--u)*.3);border-radius:calc(var(--u)*2.4)}
 @keyframes beat{
 0%,70%,100%{transform:var(--tr) scale(1);box-shadow:0 0 0 0 rgba(240,214,120,0),0 0 calc(var(--u)*1.5) rgba(240,214,120,.3)}
 12%{transform:var(--tr) scale(1.07);box-shadow:0 0 0 calc(var(--u)*.4) rgba(240,214,120,.55),0 0 calc(var(--u)*5) rgba(240,214,120,.85)}
@@ -193,6 +193,7 @@ var LOC=Object.assign({x:50,y:46,w:60,size:2.8,weight:700,
 var lc=mk(sF,'div',{x:LOC.x,y:LOC.y,w:LOC.w,size:LOC.size,weight:LOC.weight},
   undefined,L({x:70.5,y:40,w:40,size:2.8},LF.lokasi));
 lc.classList.add('tab','loc');
+if(LOC.padY!=null) lc.style.setProperty('--lpy', u(LOC.padY));   // ← tambahan
 var lh=document.createElement('i'),lK=document.createElement('button'),lS=document.createElement('button');
 lc.setAttribute('role','radiogroup'); lc.style.borderColor=FIELD.border||'#F0D678'; lc.appendChild(lh);
 [[lK,LOC.teksKarawang,'karawang'],[lS,LOC.teksSemarang,'semarang']].forEach(function(p){
