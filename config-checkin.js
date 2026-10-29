@@ -56,7 +56,7 @@ window.APP = {
         nama:    { x: 57.7, y: 50.5, w: 24.4 },      
         company: { x: 83.3, y: 50.5, w: 24.4 },      
         tombol:  { x: 70.5, y: 68.0, w: 50 },
-        pesan:   { x: 70.5, y: 76, w: 50 }
+        pesan:   { x: 70.5, y: 80, w: 50 }
       },
       success: {
         bg: 'checked-in-bg-landscape.webp', bleed: 300,
