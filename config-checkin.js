@@ -25,6 +25,7 @@ window.APP = {
       bleed: 300,
       field:   { bg: 'rgba(255,255,255,.95)', color: '#0A1A3E', border: '#F0D678', radius: 2.4, pad: 2.2, size: 4, weight: 500 },
       tab:     { x: 50, y: 42, w: 80, size: 4, weight: 700, teksInternal: 'Internal', teksExternal: 'External' },
+      lokasi:  { x: 50, y: 46, w: 60, size: 2.8, weight: 700, teksKarawang: 'Karawang', teksSemarang: 'Semarang' },
       npk:     { x: 50, y: 53, w: 80, placeholder: 'NPK (6 digits)', digits: 6 },   // digits: 6 = hanya angka & tepat 6 digit (hapus bila format NPK lain; boleh pakai inputmode: 'text')
       nama:    { x: 50, y: 50, w: 80, placeholder: 'Full Name' },
       company: { x: 50, y: 58, w: 80, placeholder: 'Company' },
@@ -48,11 +49,12 @@ window.APP = {
     landscape: {
       width: 1920, height: 1080,
       form: {
-        bg: 'checkin-bg-landscape.webp', bleed: 300,
+        bg: 'checkin-bg-landscape.png', bleed: 300,
         tab:     { x: 70.5, y: 33.4, w: 50 },
-        npk:     { x: 70.5, y: 46.3, w: 50 },
-        nama:    { x: 57.7, y: 46.3, w: 24.4 },
-        company: { x: 83.3, y: 46.3, w: 24.4 },
+        lokasi:  { x: 70.5, y: 40.0, w: 40, size: 2.8 },
+        npk:     { x: 70.5, y: 48.0, w: 50 },        // turun dari 45.6 → 48.0
+        nama:    { x: 57.7, y: 48.0, w: 24.4 },      // ikut turun agar sejajar
+        company: { x: 83.3, y: 48.0, w: 24.4 },      // ikut turun agar sejajar
         tombol:  { x: 70.5, y: 63.0, w: 50 },
         pesan:   { x: 70.5, y: 73.5, w: 50 }
       },
