@@ -51,12 +51,12 @@ window.APP = {
       form: {
         bg: 'checkin-bg-landscape.webp', bleed: 300,
         tab:     { x: 70.5, y: 33.4, w: 50 },
-        lokasi:  { x: 70.5, y: 40.0, w: 40, size: 2.8, padY: 1.0},
-        npk:     { x: 70.5, y: 48.0, w: 50 },        // turun dari 45.6 → 48.0
-        nama:    { x: 57.7, y: 48.0, w: 24.4 },      // ikut turun agar sejajar
-        company: { x: 83.3, y: 48.0, w: 24.4 },      // ikut turun agar sejajar
-        tombol:  { x: 70.5, y: 63.0, w: 50 },
-        pesan:   { x: 70.5, y: 73.5, w: 50 }
+        lokasi:  { x: 70.5, y: 45.0, w: 40, size: 2.8, padY: 1.0},
+        npk:     { x: 70.5, y: 54.0, w: 50 },        
+        nama:    { x: 57.7, y: 48.0, w: 24.4 },      
+        company: { x: 83.3, y: 48.0, w: 24.4 },      
+        tombol:  { x: 70.5, y: 68.0, w: 50 },
+        pesan:   { x: 70.5, y: 76, w: 50 }
       },
       success: {
         bg: 'checked-in-bg-landscape.webp', bleed: 300,
