@@ -221,7 +221,7 @@ function setLoc(v){
     var on=v===p[1]; p[0].classList.toggle('on',on); p[0].setAttribute('aria-checked',on);
   });
   if(v==='semarang'){
-    ND=0; iK.maxLength=7; iK.setAttribute('inputmode','text');
+    ND=0; iK.maxLength=7; iK.setAttribute('inputmode','numeric');
     iK.placeholder='S + 6 digits (e.g., S123456)'; iK.setAttribute('aria-label',iK.placeholder);
     var d=iK.value.replace(/^[Ss]/,'').replace(/\D/g,'').slice(0,6);
     iK.value='S'+d;
