@@ -49,7 +49,7 @@ window.APP = {
     landscape: {
       width: 1920, height: 1080,
       form: {
-        bg: 'checkin-bg-landscape.png', bleed: 300,
+        bg: 'checkin-bg-landscape.webp', bleed: 300,
         tab:     { x: 70.5, y: 33.4, w: 50 },
         lokasi:  { x: 70.5, y: 40.0, w: 40, size: 2.8 },
         npk:     { x: 70.5, y: 48.0, w: 50 },        // turun dari 45.6 → 48.0
