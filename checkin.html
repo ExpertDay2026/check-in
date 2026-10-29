@@ -24,6 +24,9 @@ input.e:focus,button.e:focus-visible,.tab button:focus-visible{box-shadow:0 0 0 
 .tab.drag i{transition:none}
 .tab button{position:relative;z-index:1;background:transparent;color:#fff;transition:color .2s}
 .tab button.on{color:#0A1A3E}
+/* Pill kecil untuk radio lokasi (Karawang/Semarang); pakai absolute agar tidak mengganggu flow tab utama */
+.tab.loc{position:absolute;padding:calc(var(--u)*.3);border-radius:calc(var(--u)*2.8)}
+.tab.loc i{top:calc(var(--u)*.3);bottom:calc(var(--u)*.3);left:calc(var(--u)*.3);width:calc(50% - var(--u)*.3);border-radius:calc(var(--u)*2.4)}
 @keyframes beat{
 0%,70%,100%{transform:var(--tr) scale(1);box-shadow:0 0 0 0 rgba(240,214,120,0),0 0 calc(var(--u)*1.5) rgba(240,214,120,.3)}
 12%{transform:var(--tr) scale(1.07);box-shadow:0 0 0 calc(var(--u)*.4) rgba(240,214,120,.55),0 0 calc(var(--u)*5) rgba(240,214,120,.85)}
@@ -52,7 +55,7 @@ button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 <div id="load" role="status"><div class="sp"></div><div>Loading…</div></div>
 <div id="flash"></div>
 <div id="conf"></div>
-<script>/* pengaman: layar "Loading" tidak boleh menutup halaman selamanya */
+<script>/* guard: the "Loading" screen must not block the page forever */
 function _nl(){var l=document.getElementById("load");if(l)l.style.display="none"}
 addEventListener("error",_nl);setTimeout(_nl,20000);</script>
 <noscript><p style="color:#fff;text-align:center;font:16px system-ui;padding:24px">Enable JavaScript to check in.</p></noscript>
@@ -99,7 +102,7 @@ function pos(e,c){ // posisi & ukuran huruf sesuai orientasi
   var s=e.style; e._c=c; s.left=c.x+'%'; s.top=c.y+'%'; s.width=c.w?c.w+'%':''; s.whiteSpace='';
   if(c.size)s.fontSize=e.tagName==='INPUT'?'max(16px,'+u(c.size)+')':u(c.size); // 16px: cegah zoom otomatis iOS
 }
-function mk(sc,tag,def,over,lo){ // lo = posisi khusus  (x, y, w, h)
+function mk(sc,tag,def,over,lo){ // lo = posisi khusus (x, y, w, h) di landscape
   if(over===false)return null;
   var c=Object.assign({},def,over),e=document.createElement(tag),s=e.style;
   e.className='e'; e._cp=c; e._cl=Object.assign({},c,lo);
@@ -169,38 +172,78 @@ function fitName(el,c,H,W){
   el.style.top=c.y2!=null?c.y2+'%':(bottom-el.offsetHeight/2)+'px';
 }
 
-/* ---------- layar: portrait (sF, sO) dan  (sFL, sOL) ---------- */
+/* ---------- layar: portrait (sF, sO) dan landscape (sFL, sOL) ---------- */
 var sF=mkScreen(F),sO=mkScreen(O),sFL=mkScreen(LF,true),sOL=mkScreen(LO,true),SH='0 1px 8px rgba(0,0,0,.55)';
 var FIELD=Object.assign({bg:'rgba(255,255,255,.95)',color:'#0A1A3E',border:'#F0D678',radius:2.4,pad:2.2,size:4,weight:500},F.field);
 var BTN={size:5,weight:700,color:'#0A1A3E',bg:'#F0D678',radius:3.2,pad:2.4};
 var TB=Object.assign({x:50,y:42,w:80,size:4,weight:700,teksInternal:'Internal',teksExternal:'External'},F.tab);
 var L=function(d,o){return Object.assign(d,o);};
+
 var tb=mk(sF,'div',{x:TB.x,y:TB.y,w:TB.w,size:TB.size,weight:TB.weight},undefined,L({x:68.75,y:33.4,w:50},LF.tab)); tb.classList.add('tab');
-var th=document.createElement('i'),bI=document.createElement('button'),bE=document.createElement('button'); // th = tombol emas yang meluncur
+var th=document.createElement('i'),bI=document.createElement('button'),bE=document.createElement('button'); // th = sliding gold button
 tb.setAttribute('role','radiogroup'); tb.style.borderColor=FIELD.border||'#F0D678'; tb.appendChild(th);
 [[bI,TB.teksInternal],[bE,TB.teksExternal]].forEach(function(p){
   var b=p[0]; b.type='button'; b.textContent=p[1]; b.setAttribute('role','radio'); b.style.padding=u(1)+' '+u(1);
   tb.appendChild(b);
 });
-var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'NPK (6 digits)'}),F.npk,L({x:68.75,y:45.6,w:50},LF.npk));
-var iN=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'Full Name'}),F.nama,L({x:55.9,y:45.6,w:24.4},LF.nama));
-var iC=mk(sF,'input',Object.assign({},FIELD,{x:50,y:58,w:80,placeholder:'Company'}),F.company,L({x:81.6,y:45.6,w:24.4},LF.company));
-var ND=+(F.npk&&F.npk.digits)||0; // digits: 6 => hanya angka, tepat 6 digit
+
+/* Radio lokasi: tampil hanya saat Internal */
+var LOC=Object.assign({x:50,y:46,w:60,size:2.8,weight:700,
+  teksKarawang:'Karawang',teksSemarang:'Semarang'},F.lokasi);
+var lc=mk(sF,'div',{x:LOC.x,y:LOC.y,w:LOC.w,size:LOC.size,weight:LOC.weight},
+  undefined,L({x:70.5,y:40,w:40,size:2.8},LF.lokasi));
+lc.classList.add('tab','loc');
+var lh=document.createElement('i'),lK=document.createElement('button'),lS=document.createElement('button');
+lc.setAttribute('role','radiogroup'); lc.style.borderColor=FIELD.border||'#F0D678'; lc.appendChild(lh);
+[[lK,LOC.teksKarawang,'karawang'],[lS,LOC.teksSemarang,'semarang']].forEach(function(p){
+  var b=p[0]; b.type='button'; b.textContent=p[1]; b.setAttribute('role','radio');
+  b.style.padding=u(.2)+' '+u(.4); lc.appendChild(b);
+});
+var loc='karawang';
+
+var iK=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'NPK (6 digits)'}),F.npk,L({x:70.5,y:48,w:50},LF.npk));
+var iN=mk(sF,'input',Object.assign({},FIELD,{x:50,y:50,w:80,placeholder:'Full Name'}),F.nama,L({x:57.7,y:48,w:24.4},LF.nama));
+var iC=mk(sF,'input',Object.assign({},FIELD,{x:50,y:58,w:80,placeholder:'Company'}),F.company,L({x:83.3,y:48,w:24.4},LF.company));
+var ND0=+(F.npk&&F.npk.digits)||0, ND=ND0; // digits: 6 => hanya angka, tepat 6 digit
 iK.type=iN.type=iC.type='text'; iK.autocomplete='off'; iK.autocapitalize='characters'; iK.maxLength=ND||30;
 iK.setAttribute('inputmode',ND?'numeric':((F.npk&&F.npk.inputmode)||'text'));
 iN.autocomplete='name'; iN.maxLength=80; iC.autocomplete='organization'; iC.maxLength=80;
 iK.setAttribute('enterkeyhint','go'); iN.setAttribute('enterkeyhint','next'); iC.setAttribute('enterkeyhint','go');
-var bT=mk(sF,'button',Object.assign({x:50,y:69,w:62,teks:'Check-in'},BTN),F.tombol,L({x:68.75,y:59.3,w:50},LF.tombol)); bT.type='button'; bT.classList.add('beat');
-var eE=mk(sF,'div',{x:50,y:76,w:80,size:3.4,weight:500,color:'#ffb4b4',lineHeight:1.3,shadow:SH},F.pesan,L({x:68.75,y:69.9,w:50},LF.pesan));
+var bT=mk(sF,'button',Object.assign({x:50,y:69,w:62,teks:'Check-in'},BTN),F.tombol,L({x:70.5,y:63,w:50},LF.tombol)); bT.type='button'; bT.classList.add('beat');
+var eE=mk(sF,'div',{x:50,y:76,w:80,size:3.4,weight:500,color:'#ffb4b4',lineHeight:1.3,shadow:SH},F.pesan,L({x:70.5,y:73.5,w:50},LF.pesan));
 var lbT=bT.textContent;
 
-var sN=mk(sO,'div',{x:50,y:54,w:77,h:9.2,size:8,weight:700,lineHeight:1.1,lines:2,min:3.5},O.nama,L({x:74,y:44,w:39.6,h:17},LO.nama));
-var sD=mk(sO,'div',{x:50,y:60,w:84,h:6,size:5,weight:500,color:'#F0D678',min:3.2},O.divisi,L({x:74,y:57,w:40,h:7},LO.divisi));
-var sW=mk(sO,'div',{x:50,y:68,size:4,weight:500,color:'rgba(255,255,255,.88)'},O.waktu,L({x:74,y:67},LO.waktu));
-var sC=mk(sO,'div',{x:50,y:73,w:80,size:3.4,weight:500,color:'#F0D678'},O.catatan,L({x:74,y:75,w:40},LO.catatan));
+/* pindah lokasi: sesuaikan format NPK & placeholder */
+function setLoc(v){
+  loc=v;
+  lc.classList.toggle('ext',v==='semarang');
+  [[lK,'karawang'],[lS,'semarang']].forEach(function(p){
+    var on=v===p[1]; p[0].classList.toggle('on',on); p[0].setAttribute('aria-checked',on);
+  });
+  if(v==='semarang'){
+    ND=0; iK.maxLength=7; iK.setAttribute('inputmode','text');
+    iK.placeholder='S + 6 digits (e.g., S123456)'; iK.setAttribute('aria-label',iK.placeholder);
+    var d=iK.value.replace(/^[Ss]/,'').replace(/\D/g,'').slice(0,6);
+    iK.value='S'+d;
+  }else{
+    ND=ND0; iK.maxLength=ND0||30;
+    iK.setAttribute('inputmode',ND0?'numeric':((F.npk&&F.npk.inputmode)||'text'));
+    iK.placeholder='NPK (6 digits)'; iK.setAttribute('aria-label',iK.placeholder);
+    iK.value=iK.value.replace(/^[Ss]/,'').replace(/\D/g,'').slice(0,ND0||6);
+  }
+  err('');
+}
+lK.onclick=function(){setLoc('karawang');};
+lS.onclick=function(){setLoc('semarang');};
+lc.onkeydown=function(e){if(e.key==='ArrowLeft')setLoc('karawang');else if(e.key==='ArrowRight')setLoc('semarang');};
+
+var sN=mk(sO,'div',{x:50,y:54,w:77,h:9.2,size:8,weight:700,lineHeight:1.1,lines:2,min:3.5},O.nama,L({x:70.5,y:44,w:50,h:17},LO.nama));
+var sD=mk(sO,'div',{x:50,y:60,w:84,h:6,size:5,weight:500,color:'#F0D678',min:3.2},O.divisi,L({x:70.5,y:57,w:50,h:7},LO.divisi));
+var sW=mk(sO,'div',{x:50,y:68,size:4,weight:500,color:'rgba(255,255,255,.88)'},O.waktu,L({x:70.5,y:67},LO.waktu));
+var sC=mk(sO,'div',{x:50,y:73,w:80,size:3.4,weight:500,color:'#F0D678'},O.catatan,L({x:70.5,y:75,w:50},LO.catatan));
 
 /* elemen yang sama dipindah antara kanvas portrait dan landscape (isian tidak terduplikasi) */
-var formEls=[tb,iK,iN,iC,bT,eE],okEls=[sN,sD,sW,sC].filter(Boolean),curS=sF;
+var formEls=[tb,lc,iK,iN,iC,bT,eE],okEls=[sN,sD,sW,sC].filter(Boolean),curS=sF;
 function arrange(){
   var ok=curS===sO;
   [[formEls,land?sFL:sF],[okEls,land?sOL:sO]].forEach(function(p){
@@ -223,7 +266,7 @@ function net(){ // tombol mati & pesan jelas saat HP offline; pulih sendiri saat
   else if(offShown){err('');offShown=false;}
 }
 addEventListener('online',net); addEventListener('offline',net);
-function confetti(){ // semburan konfeti emas saat berhasil
+function confetti(){ // gold confetti burst on success
   if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   var c=document.getElementById('conf'),cols=['#F0D678','#d4af37','#ffe699','#ffffff','#3fa9ff'];
   for(var i=0;i<44;i++){
@@ -238,13 +281,15 @@ function confetti(){ // semburan konfeti emas saat berhasil
 }
 
 function setTab(t){
-  tab=t; iK.hidden=t!=='internal'; iN.hidden=iC.hidden=t==='internal'; err('');
+  tab=t; iK.hidden=t!=='internal'; iN.hidden=iC.hidden=t==='internal';
+  if(lc)lc.hidden=t!=='internal';     // radio lokasi hanya untuk Internal
+  err('');
   tb.classList.toggle('ext',t==='external');
   [[bI,'internal'],[bE,'external']].forEach(function(p){var on=t===p[1];p[0].classList.toggle('on',on);p[0].setAttribute('aria-checked',on);});
 }
 bI.onclick=function(){setTab('internal');}; bE.onclick=function(){setTab('external');};
 tb.onkeydown=function(e){if(e.key==='ArrowLeft')setTab('internal');else if(e.key==='ArrowRight')setTab('external');};
-/* geser (swipe) tombol emas; ketukan di salah satu sisi tetap bekerja */
+/* swipe the gold button; tapping either side still works */
 var dg=null,dragged=false;
 tb.addEventListener('pointerdown',function(e){dg={x:e.clientX,s:tab==='external'?th.offsetWidth:0,m:false};});
 tb.addEventListener('pointermove',function(e){
@@ -267,7 +312,7 @@ function api(a,args){
     .then(function(r){clearTimeout(tm);return r.text();})
     .then(function(t){try{return JSON.parse(t);}catch(e){throw new Error('The server did not return data. Make sure the Apps Script deployment access is set to Anyone.');}})
     .then(function(j){
-      if(!j.ok){var er=new Error(j.error||'Failed to contact the server'); er.retry=/padat|busy/i.test(er.message); throw er;} // server padat: boleh dicoba lagi otomatis
+      if(!j.ok){var er=new Error(j.error||'Failed to contact the server'); er.retry=/padat|busy/i.test(er.message); throw er;} // server busy: safe to auto-retry
       return j.data;
     })
     .catch(function(e){
@@ -278,15 +323,15 @@ function api(a,args){
 }
 
 function done(r){
-  sN.textContent=r.nama; sD.textContent=r.bagian; sW.textContent='At '+r.waktu+ ' WIB';
+  sN.textContent=r.nama; sD.textContent=r.bagian; sW.textContent='At '+r.waktu+' WIB';
   if(sC)sC.textContent=r.again?'You have already checked in before.':'';
   show(sO); texts.forEach(shrink);
-  var f=document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); // kilat
+  var f=document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); // flash
   confetti();
 }
 function buzz(){if(A.VIBRATE&&navigator.vibrate)try{navigator.vibrate(A.VIBRATE);}catch(e){}}
 
-function send(body,n){ // coba lagi otomatis (maks 2x) bila server padat / sinyal putus; aman karena server menolak data ganda
+function send(body,n){ // retry automatically (max 2x) if server busy / signal drops; safe because server rejects duplicates
   return api('checkin',body).catch(function(e){
     if(n<2&&e&&e.retry)return new Promise(function(r){setTimeout(r,1200*(n+1));}).then(function(){return send(body,n+1);});
     throw e;
@@ -296,9 +341,15 @@ function submit(){
   if(sending||offline())return;
   err(''); var body;
   if(tab==='internal'){
-    var k=iK.value.trim(); if(!k)return err('NPK is required.',[iK]);
-    if(ND&&k.length!==ND)return err('NPK must be '+ND+' digits.',[iK]);
-    body=['internal',k];
+    var k=iK.value.trim();
+    if(loc==='semarang'){
+      if(!/^S\d{6}$/i.test(k))return err('Semarang NPK must be S followed by 6 digits (e.g., S123456).',[iK]);
+      body=['internal',k.toUpperCase(),'semarang'];
+    }else{
+      if(!k)return err('NPK is required.',[iK]);
+      if(ND0&&k.length!==ND0)return err('Karawang NPK must be '+ND0+' digits.',[iK]);
+      body=['internal',k,'karawang'];
+    }
   }else{
     var n=iN.value.trim(),c=iC.value.trim();
     if(n.length<2)return err('Name must be at least 2 characters.',[iN]);
@@ -308,21 +359,31 @@ function submit(){
   if(!apiOk)return err('Server address is not configured (CHECKIN_API_URL in config-checkin.js).');
   busy(true);
   send(body,0).then(function(r){busy(false);done(r);})
-    .catch(function(e){busy(false);var m=(e&&e.message)||'An error occurred. Please refresh the page and try again.';err(m,/^NPK/i.test(m)?[iK]:/^(Nama|Name)/i.test(m)?[iN]:/(perusahaan|company)/i.test(m)?[iC]:null);});
+    .catch(function(e){busy(false);var m=(e&&e.message)||'An error occurred. Please refresh the page and try again.';err(m,/^(NPK|Semarang|Karawang)/i.test(m)?[iK]:/^(Nama|Name)/i.test(m)?[iN]:/(perusahaan|company)/i.test(m)?[iC]:null);});
   return true;
 }
-bT.onclick=function(){if(submit())buzz();}; // getar hanya dari tap tombol (bukan Enter, bukan saat berhasil), dan hanya bila data valid
+bT.onclick=function(){if(submit())buzz();}; // vibrate only on button tap, and only when data is valid
 [iK,iN,iC].forEach(function(i){
-  i.onkeydown=function(e){if(e.key!=='Enter')return; if(i===iN&&!iC.value.trim()){iC.focus();return;} submit();}; // Enter di Nama pindah ke Company
+  i.onkeydown=function(e){if(e.key!=='Enter')return; if(i===iN&&!iC.value.trim()){iC.focus();return;} submit();}; // Enter in Name moves to Company
   i.addEventListener('input',function(){i.classList.remove('bad');});
 });
-iK.addEventListener('input',function(){if(ND)iK.value=iK.value.replace(/\D/g,'').slice(0,ND);}); // NPK: hanya angka
+iK.addEventListener('input',function(){ // enforce NPK format based on selected location
+  if(loc==='semarang'){
+    var d=iK.value.replace(/^[Ss]/,'').replace(/\D/g,'').slice(0,6);
+    if(iK.value!=='S'+d){
+      iK.value='S'+d;
+      try{iK.setSelectionRange(iK.value.length,iK.value.length);}catch(e){}
+    }
+  }else if(ND){
+    iK.value=iK.value.replace(/\D/g,'').slice(0,ND);
+  }
+});
 
-/* ---------- mulai ---------- */
+/* ---------- start ---------- */
 fit(); addEventListener('resize',fit); addEventListener('orientationchange',fit); addEventListener('load',fit); addEventListener('pageshow',fit);
 if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',fit);
-setTab('internal'); show(sF);
-if(!apiOk)err('Server address is not configured (CHECKIN_API_URL in config-checkin.js).');else api('ping').catch(function(){}); // pemanasan server
+setTab('internal'); setLoc('karawang'); show(sF);
+if(!apiOk)err('Server address is not configured (CHECKIN_API_URL in config-checkin.js).');else api('ping').catch(function(){}); // server warm-up
 if(offline())net();
 Promise.race([Promise.all([(land?sFL:sF).ready,fontsReady]),new Promise(function(ok){setTimeout(ok,10000);})]).then(hideLoad);
 })();
